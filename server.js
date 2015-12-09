@@ -48,7 +48,7 @@ getData();
 app.get('/data', function (req, res) {
     fs.readFile('data.csv', function (err, data) {
         if (err) throw err;
-        res.send(data);
+        res.send(true);
     });
 
 });
