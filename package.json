@@ -20,5 +20,8 @@
     "express": "^4.13.3",
     "underscore": "^1.8.3",
     "websocket": "^1.0.22"
+  },
+  "engines": {
+    "node": "0.10.31"
   }
 }
