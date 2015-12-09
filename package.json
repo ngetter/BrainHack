@@ -1,0 +1,24 @@
+{
+  "name": "BrainHack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bigShai/BrainHack.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bigShai/BrainHack/issues"
+  },
+  "homepage": "https://github.com/bigShai/BrainHack",
+  "dependencies": {
+    "express": "^4.13.3",
+    "underscore": "^1.8.3",
+    "websocket": "^1.0.22"
+  }
+}
