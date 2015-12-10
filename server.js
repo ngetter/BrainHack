@@ -10,10 +10,10 @@ var plivo = require('plivo').RestAPI({
     authToken: 'NTkzMDY3OWU2NGQxYTUyNjdmNzJkNWJlNGNmM2Jj'
 });
 
-var alpha = [];
+var beta = [];
 var theta = [];
 
-var alphaThreshold = -0.5;
+var betaThreshold = -0.5;
 var thetaThreshold = -0.5;
 
 var smsLog = [ 1449750873303,1448750873303, 1447750873303];
@@ -43,7 +43,7 @@ function getData(){
 
                 //appendToFile(values.toString() + '\n');
 
-                alpha.push(data.alpha);
+                beta.push(data.beta);
                 theta.push(data.theta);
 
                 checkThresholds(10);
@@ -57,17 +57,17 @@ function getData(){
 
 function checkThresholds(windowSize){
     console.log('Checking Thresholds..');
-    var alphaAvg = sampleAvg(alpha, windowSize);
+    var betaAvg = sampleAvg(beta, windowSize);
     var thetaAvg = sampleAvg(theta, windowSize);
 
-    console.log('alpha: ' + alphaAvg + ' theta: '+ thetaAvg);
+    console.log('beta: ' + betaAvg + ' theta: '+ thetaAvg);
 
-    if (alphaAvg > alphaThreshold && thetaAvg > thetaThreshold){
-        console.log('Thresholds Not OK');
+    if (betaAvg > betaThreshold && thetaAvg > thetaThreshold){
         //sendSMS();
+        console.log('Patient is NOT OK!!!! :(');
         callPatient();
     } else {
-        console.log('Thresholds OK :)');
+        console.log('Patient is OK :)');
     }
 }
 
@@ -144,12 +144,9 @@ function callPatient(){
 
     plivo.make_call(params, function(status, response) {
         if (status >= 200 && status < 300) {
-            console.log('Successfully made call request.');
-            console.log('Response:', response);
+            console.log('CALLING PATIENT NOW!!');
         } else {
             console.log('Oops! Something went wrong.');
-            console.log('Status:', status);
-            console.log('Response:', response);
         }
     });
 }
@@ -167,13 +164,13 @@ app.get('/smslog', function (req, res) {
 });
 
 app.get('/thresholds', function (req, res) {
-    alphaThreshold = (req.query.alpha - 50)/50;
+    betaThreshold = (req.query.beta - 50)/50;
     thetaThreshold = (req.query.theta - 50)/50;
 
-    console.log('alphaThreshold:'+ alphaThreshold + ' thetaThreshold:' + thetaThreshold + ' e3Threshold:' + e3Threshold);
+    console.log('betaThreshold:'+ betaThreshold + ' thetaThreshold:' + thetaThreshold + ' e3Threshold:' + e3Threshold);
 
     res.json({
-        alphaThreshold: alphaThreshold,
+        betaThreshold: betaThreshold,
         thetaThreshold: thetaThreshold
     });
 });
