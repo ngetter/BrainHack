@@ -17,17 +17,7 @@ var h1Threshold = 1;
 var h2Threshold = 1;
 var e3Threshold = 1;
 
-var smsLog = [
-    {
-        timestamp: 1449750873303
-    },
-    {
-        timestamp: 1448750873303
-    },
-    {
-        timestamp: 1447750873303
-    }
-];
+var smsLog = [ 1449750873303,1448750873303, 1447750873303];
 var resend = true;
 var recall = true;
 
@@ -132,9 +122,7 @@ function sendSMS(){
         }
 
         console.log('SMS sent to: ' + params.dst + ' msg: ' + params.text);
-        smsLog.push({
-            timestamp: (new Date()).getTime()
-        })
+        smsLog.push((new Date()).getTime());
     });
 }
 
@@ -178,9 +166,7 @@ app.get('/data', function (req, res) {
 });
 
 app.get('/smslog', function (req, res) {
-    res.json({
-        log: smsLog
-    });
+    res.send(smsLog);
 });
 
 app.get('/thresholds', function (req, res) {
