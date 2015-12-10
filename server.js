@@ -167,8 +167,8 @@ app.get('/smslog', function (req, res) {
 });
 
 app.get('/thresholds', function (req, res) {
-    alphaThreshold = req.query.alpha;
-    thetaThreshold = req.query.theta;
+    alphaThreshold = (req.query.alpha - 50)/50;
+    thetaThreshold = (req.query.theta - 50)/50;
 
     console.log('alphaThreshold:'+ alphaThreshold + ' thetaThreshold:' + thetaThreshold + ' e3Threshold:' + e3Threshold);
 
