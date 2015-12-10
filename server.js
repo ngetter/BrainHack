@@ -159,7 +159,6 @@ function callPatient(){
     });
 }
 
-callPatient();
 
 app.get('/data', function (req, res) {
     fs.readFile('data.csv', function (err, data) {
