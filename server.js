@@ -166,7 +166,7 @@ app.get('/data', function (req, res) {
 });
 
 app.get('/smslog', function (req, res) {
-    res.send(smsLog);
+    res.json({ log: smsLog});
 });
 
 app.get('/thresholds', function (req, res) {
