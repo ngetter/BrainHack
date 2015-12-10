@@ -13,8 +13,8 @@ var plivo = require('plivo').RestAPI({
 var alpha = [];
 var theta = [];
 
-var alphaThreshold = 1;
-var thetaThreshold = 1;
+var alphaThreshold = -0.5;
+var thetaThreshold = -0.5;
 
 var smsLog = [ 1449750873303,1448750873303, 1447750873303];
 var resend = true;
