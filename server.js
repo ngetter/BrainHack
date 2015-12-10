@@ -167,7 +167,7 @@ app.get('/thresholds', function (req, res) {
     betaThreshold = (req.query.beta - 50)/50;
     thetaThreshold = (req.query.theta - 50)/50;
 
-    console.log('betaThreshold:'+ betaThreshold + ' thetaThreshold:' + thetaThreshold + ' e3Threshold:' + e3Threshold);
+    console.log('betaThreshold:'+ betaThreshold + ' thetaThreshold:' + thetaThreshold );
 
     res.json({
         betaThreshold: betaThreshold,
