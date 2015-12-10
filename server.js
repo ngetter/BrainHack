@@ -178,7 +178,7 @@ app.post('/thresholds', function (req, res) {
     h2Threshold = req.query.h2;
     e3Threshold = req.query.e3;
 
-    console.log('h1Threshold:'+ h1Threshold + 'h2Threshold:' + h2Threshold + 'e3Threshold:' + e3Threshold);
+    console.log('h1Threshold:'+ h1Threshold + ' h2Threshold:' + h2Threshold + ' e3Threshold:' + e3Threshold);
 
     res.json({
         h1Threshold: h1Threshold,
