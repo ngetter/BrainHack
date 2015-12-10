@@ -17,7 +17,17 @@ var h1Threshold = 1;
 var h2Threshold = 1;
 var e3Threshold = 1;
 
-var smsLog = [];
+var smsLog = [
+    {
+        timestamp: 1449750873303
+    },
+    {
+        timestamp: 1448750873303
+    },
+    {
+        timestamp: 1447750873303
+    }
+];
 var resend = true;
 var recall = true;
 
