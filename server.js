@@ -19,6 +19,7 @@ var e3Threshold = 1;
 
 var smsLog = [];
 var resend = true;
+var recall = true;
 
 function getData(){
     var client = new WebSocketClient();
@@ -66,7 +67,8 @@ function checkThresholds(windowSize){
 
     if (h1Avg > h1Threshold && h2Avg > h2Threshold && e3Avg > e3Threshold){
         console.log('Thresholds Not OK');
-        sendSMS();
+        //sendSMS();
+        callPatient();
     } else {
         console.log('Thresholds OK :)');
     }
@@ -129,6 +131,36 @@ function sendSMS(){
 getData();
 
 
+function callPatient(){
+    if (!recall){
+        return;
+    }
+
+    recall = false;
+    setTimeout(function(){
+        recall = true;
+    }, 60 * 1000);
+
+    var params = {
+        from: '+972545801707',
+        to: '+972545801707',
+        answer_url: 'http://172.16.59.192:8000/answer'
+    };
+
+    plivo.make_call(params, function(status, response) {
+        if (status >= 200 && status < 300) {
+            console.log('Successfully made call request.');
+            console.log('Response:', response);
+        } else {
+            console.log('Oops! Something went wrong.');
+            console.log('Status:', status);
+            console.log('Response:', response);
+        }
+    });
+}
+
+callPatient();
+
 app.get('/data', function (req, res) {
     fs.readFile('data.csv', function (err, data) {
         if (err) throw err;
@@ -142,7 +174,6 @@ app.get('/smslog', function (req, res) {
     });
 });
 
-
 app.post('/thresholds', function (req, res) {
     h1Threshold = req.query.h1;
     h2Threshold = req.query.h2;
@@ -154,7 +185,7 @@ app.post('/thresholds', function (req, res) {
     });
 });
 
-var server = app.listen(5000, function () {
+var server = app.listen(8000, function () {
     var host = server.address().address;
     var port = server.address().port;
 
