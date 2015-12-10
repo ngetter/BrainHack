@@ -10,11 +10,11 @@ var plivo = require('plivo').RestAPI({
     authToken: 'NTkzMDY3OWU2NGQxYTUyNjdmNzJkNWJlNGNmM2Jj'
 });
 
-var delta = [];
-var gamma = [];
+var alpha = [];
+var theta = [];
 
-var deltaThreshold = 1;
-var gammaThreshold = 1;
+var alphaThreshold = 1;
+var thetaThreshold = 1;
 
 var smsLog = [ 1449750873303,1448750873303, 1447750873303];
 var resend = true;
@@ -43,8 +43,8 @@ function getData(){
 
                 //appendToFile(values.toString() + '\n');
 
-                delta.push(data.delta);
-                gamma.push(data.gamma);
+                alpha.push(data.alpha);
+                theta.push(data.theta);
 
                 checkThresholds(10);
             }
@@ -57,12 +57,12 @@ function getData(){
 
 function checkThresholds(windowSize){
     console.log('Checking Thresholds..');
-    var deltaAvg = sampleAvg(delta, windowSize);
-    var gammaAvg = sampleAvg(gamma, windowSize);
+    var alphaAvg = sampleAvg(alpha, windowSize);
+    var thetaAvg = sampleAvg(theta, windowSize);
 
-    console.log('delta: ' + deltaAvg + ' gamma: '+ gammaAvg);
+    console.log('alpha: ' + alphaAvg + ' theta: '+ thetaAvg);
 
-    if (deltaAvg > deltaThreshold && gammaAvg > gammaThreshold){
+    if (alphaAvg > alphaThreshold && thetaAvg > thetaThreshold){
         console.log('Thresholds Not OK');
         //sendSMS();
         callPatient();
@@ -167,14 +167,14 @@ app.get('/smslog', function (req, res) {
 });
 
 app.get('/thresholds', function (req, res) {
-    deltaThreshold = req.query.delta;
-    gammaThreshold = req.query.gamma;
+    alphaThreshold = req.query.alpha;
+    thetaThreshold = req.query.theta;
 
-    console.log('deltaThreshold:'+ deltaThreshold + ' gammaThreshold:' + gammaThreshold + ' e3Threshold:' + e3Threshold);
+    console.log('alphaThreshold:'+ alphaThreshold + ' thetaThreshold:' + thetaThreshold + ' e3Threshold:' + e3Threshold);
 
     res.json({
-        deltaThreshold: deltaThreshold,
-        gammaThreshold: gammaThreshold
+        alphaThreshold: alphaThreshold,
+        thetaThreshold: thetaThreshold
     });
 });
 
