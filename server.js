@@ -3,6 +3,7 @@ var fs = require('fs');
 var WebSocketClient = require('websocket').client;
 var app = express();
 _ = require('underscore');
+var cors = require("cors");
 
 var plivo = require('plivo').RestAPI({
     authId: 'MAYTK2MDHLZDQ4MDM5NJ',
@@ -182,6 +183,8 @@ app.get('/thresholds', function (req, res) {
         e3Threshold: e3Threshold
     });
 });
+
+app.use(cors());
 
 var server = app.listen(80, function () {
     var host = server.address().address;
