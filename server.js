@@ -173,7 +173,7 @@ app.get('/smslog', function (req, res) {
     });
 });
 
-app.post('/thresholds', function (req, res) {
+app.get('/thresholds', function (req, res) {
     h1Threshold = req.query.h1;
     h2Threshold = req.query.h2;
     e3Threshold = req.query.e3;
