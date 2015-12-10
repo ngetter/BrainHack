@@ -11,10 +11,10 @@ var plivo = require('plivo').RestAPI({
 });
 
 var delta = [];
-var beta = [];
+var gamma = [];
 
 var deltaThreshold = 1;
-var betaThreshold = 1;
+var gammaThreshold = 1;
 
 var smsLog = [ 1449750873303,1448750873303, 1447750873303];
 var resend = true;
@@ -44,7 +44,7 @@ function getData(){
                 //appendToFile(values.toString() + '\n');
 
                 delta.push(data.delta);
-                beta.push(data.beta);
+                gamma.push(data.gamma);
 
                 checkThresholds(10);
             }
@@ -58,11 +58,11 @@ function getData(){
 function checkThresholds(windowSize){
     console.log('Checking Thresholds..');
     var deltaAvg = sampleAvg(delta, windowSize);
-    var betaAvg = sampleAvg(beta, windowSize);
+    var gammaAvg = sampleAvg(gamma, windowSize);
 
-    console.log('delta: ' + deltaAvg + ' beta: '+ betaAvg);
+    console.log('delta: ' + deltaAvg + ' gamma: '+ gammaAvg);
 
-    if (deltaAvg > deltaThreshold && betaAvg > betaThreshold){
+    if (deltaAvg > deltaThreshold && gammaAvg > gammaThreshold){
         console.log('Thresholds Not OK');
         //sendSMS();
         callPatient();
@@ -168,13 +168,13 @@ app.get('/smslog', function (req, res) {
 
 app.get('/thresholds', function (req, res) {
     deltaThreshold = req.query.delta;
-    betaThreshold = req.query.beta;
+    gammaThreshold = req.query.gamma;
 
-    console.log('deltaThreshold:'+ deltaThreshold + ' betaThreshold:' + betaThreshold + ' e3Threshold:' + e3Threshold);
+    console.log('deltaThreshold:'+ deltaThreshold + ' gammaThreshold:' + gammaThreshold + ' e3Threshold:' + e3Threshold);
 
     res.json({
         deltaThreshold: deltaThreshold,
-        betaThreshold: betaThreshold
+        gammaThreshold: gammaThreshold
     });
 });
 
