@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/bigShai/BrainHack",
   "dependencies": {
+    "cors": "^2.7.1",
     "express": "^4.13.3",
     "plivo": "^0.3.3",
     "underscore": "^1.8.3",

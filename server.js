@@ -10,13 +10,11 @@ var plivo = require('plivo').RestAPI({
     authToken: 'NTkzMDY3OWU2NGQxYTUyNjdmNzJkNWJlNGNmM2Jj'
 });
 
-var h1 = [];
-var h2 = [];
-var e3 = [];
+var delta = [];
+var beta = [];
 
-var h1Threshold = 1;
-var h2Threshold = 1;
-var e3Threshold = 1;
+var deltaThreshold = 1;
+var betaThreshold = 1;
 
 var smsLog = [ 1449750873303,1448750873303, 1447750873303];
 var resend = true;
@@ -45,9 +43,8 @@ function getData(){
 
                 //appendToFile(values.toString() + '\n');
 
-                h1.push(data.h1);
-                h2.push(data.h2);
-                e3.push(data.e3);
+                delta.push(data.delta);
+                beta.push(data.beta);
 
                 checkThresholds(10);
             }
@@ -60,13 +57,12 @@ function getData(){
 
 function checkThresholds(windowSize){
     console.log('Checking Thresholds..');
-    var h1Avg = sampleAvg(h1, windowSize);
-    var h2Avg = sampleAvg(h2, windowSize);
-    var e3Avg = sampleAvg(e3, windowSize);
+    var deltaAvg = sampleAvg(delta, windowSize);
+    var betaAvg = sampleAvg(beta, windowSize);
 
-    console.log('h1: ' + h1Avg + ' h2: '+ h2Avg + ' e3: ' + e3Avg);
+    console.log('delta: ' + deltaAvg + ' beta: '+ betaAvg);
 
-    if (h1Avg > h1Threshold && h2Avg > h2Threshold && e3Avg > e3Threshold){
+    if (deltaAvg > deltaThreshold && betaAvg > betaThreshold){
         console.log('Thresholds Not OK');
         //sendSMS();
         callPatient();
@@ -171,16 +167,14 @@ app.get('/smslog', function (req, res) {
 });
 
 app.get('/thresholds', function (req, res) {
-    h1Threshold = req.query.h1;
-    h2Threshold = req.query.h2;
-    e3Threshold = req.query.e3;
+    deltaThreshold = req.query.delta;
+    betaThreshold = req.query.beta;
 
-    console.log('h1Threshold:'+ h1Threshold + ' h2Threshold:' + h2Threshold + ' e3Threshold:' + e3Threshold);
+    console.log('deltaThreshold:'+ deltaThreshold + ' betaThreshold:' + betaThreshold + ' e3Threshold:' + e3Threshold);
 
     res.json({
-        h1Threshold: h1Threshold,
-        h2Threshold: h2Threshold,
-        e3Threshold: e3Threshold
+        deltaThreshold: deltaThreshold,
+        betaThreshold: betaThreshold
     });
 });
 
