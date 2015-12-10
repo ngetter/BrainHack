@@ -4,6 +4,22 @@ var WebSocketClient = require('websocket').client;
 var app = express();
 _ = require('underscore');
 
+var plivo = require('plivo').RestAPI({
+    authId: 'MAYTK2MDHLZDQ4MDM5NJ',
+    authToken: 'NTkzMDY3OWU2NGQxYTUyNjdmNzJkNWJlNGNmM2Jj'
+});
+
+var h1 = [];
+var h2 = [];
+var e3 = [];
+
+var h1Threshold = 1;
+var h2Threshold = 1;
+var e3Threshold = 1;
+
+var smsLog = [];
+var resend = true;
+
 function getData(){
     var client = new WebSocketClient();
 
@@ -21,10 +37,17 @@ function getData(){
         });
         connection.on('message', function(message) {
             if (message.type === 'utf8') {
-                var keys = _.keys(JSON.parse(message.utf8Data).features);
+                var data = JSON.parse(message.utf8Data).features;
                 var values = _.values(JSON.parse(message.utf8Data).features);
-                appendToFile(values.toString() + '\n');
-                console.log(keys.toString());
+                //console.log(values.toString());
+
+                //appendToFile(values.toString() + '\n');
+
+                h1.push(data.h1);
+                h2.push(data.h2);
+                e3.push(data.e3);
+
+                checkThresholds(10);
             }
         });
 
@@ -33,6 +56,21 @@ function getData(){
     client.connect('ws://cloud.neurosteer.com:8080/v1/features/0006664E5C06/pull');
 }
 
+function checkThresholds(windowSize){
+    console.log('Checking Thresholds..');
+    var h1Avg = sampleAvg(h1, windowSize);
+    var h2Avg = sampleAvg(h2, windowSize);
+    var e3Avg = sampleAvg(e3, windowSize);
+
+    console.log('h1: ' + h1Avg + ' h2: '+ h2Avg + ' e3: ' + e3Avg);
+
+    if (h1Avg > h1Threshold && h2Avg > h2Threshold && e3Avg > e3Threshold){
+        console.log('Thresholds Not OK');
+        sendSMS();
+    } else {
+        console.log('Thresholds OK :)');
+    }
+}
 
 function appendToFile(msg){
     fs.appendFile('data.csv', msg, function (err) {
@@ -40,7 +78,53 @@ function appendToFile(msg){
     });
 }
 
+function sampleAvg(arr, windowSize){
+    if (arr.length < windowSize){
+        console.log('Waiting for more data..');
+        return undefined;
+    }
 
+    var i = arr.length - windowSize;
+    var sum = 0;
+    while(i < arr.length){
+        sum += arr[i];
+        i++;
+    }
+
+    return sum/windowSize;
+}
+
+
+
+function sendSMS(){
+    if (!resend){
+        return;
+    }
+
+    resend = false;
+    setTimeout(function(){
+        resend = true;
+    }, 60 * 1000);
+
+    console.log('Sending SMS..');
+    var params = {
+        'src': 'CalmMe',
+        'dst' : '+972545801707',
+        'text' : 'Calm Down! http://www.nba.com',
+        'type' : 'sms'
+    };
+
+    plivo.send_message(params, function (status, response) {
+        if (status >= 400) {
+            console.log('Plivo: Failed sending sms. errStatus: ' + status + ' err: ' + JSON.stringify(response));
+        }
+
+        console.log('SMS sent to: ' + params.dst + ' msg: ' + params.text);
+        smsLog.push({
+            timestamp: (new Date()).getTime()
+        })
+    });
+}
 
 getData();
 
@@ -48,12 +132,29 @@ getData();
 app.get('/data', function (req, res) {
     fs.readFile('data.csv', function (err, data) {
         if (err) throw err;
-        res.send(true);
+        res.send(data);
     });
-
 });
 
-var server = app.listen(80, function () {
+app.get('/smslog', function (req, res) {
+    res.json({
+        log: smsLog
+    });
+});
+
+
+app.post('/thresholds', function (req, res) {
+    h1Threshold = req.query.h1;
+    h2Threshold = req.query.h2;
+    e3Threshold = req.query.e3;
+    res.json({
+        h1Threshold: h1Threshold,
+        h2Threshold: h2Threshold,
+        e3Threshold: e3Threshold
+    });
+});
+
+var server = app.listen(8000, function () {
     var host = server.address().address;
     var port = server.address().port;
 
