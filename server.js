@@ -13,8 +13,8 @@ var plivo = require('plivo').RestAPI({
 var beta = [];
 var theta = [];
 
-var betaThreshold = -0.9;
-var thetaThreshold = -0.7;
+var betaThreshold = -0.8;
+var thetaThreshold = -0.5;
 
 var smsLog = [ 1449750873303,1448750873303, 1447750873303];
 var resend = true;
@@ -164,8 +164,8 @@ app.get('/smslog', function (req, res) {
 });
 
 app.get('/thresholds', function (req, res) {
-    betaThreshold = (req.query.beta - 50)/50;
-    thetaThreshold = (req.query.theta - 50)/50;
+    //betaThreshold = (req.query.beta - 50)/50;
+    //thetaThreshold = (req.query.theta - 50)/50;
 
     console.log('betaThreshold:'+ betaThreshold + ' thetaThreshold:' + thetaThreshold );
 
